@@ -8,22 +8,17 @@ function AuthenticationPage() {
 export default AuthenticationPage;
 
 export async function action({ request }) {
-  console.log('action working', request);
   const searchParams = new URL(request.url).searchParams;
   const mode = searchParams.get('mode') || 'login';
-  console.log(mode);
   if (mode !== 'login' && mode !== 'signup') {
-    console.log('if');
     throw json({ message: 'Unsupported mode.' }, { status: 422 });
   }
 
-  const data = request.formData();
-  console.log(data);
+  const data = await request.formData();
   const authData = {
     email: data.get('email'),
     password: data.get('password'),
   };
-  console.log('authData: ' + authData);
   const response = await fetch('http://localhost:8080/' + mode, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json ' },
